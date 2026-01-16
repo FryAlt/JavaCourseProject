@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${book.id == null} ? 'Создание книги' : 'Редактирование книги'">Товар</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-transparent mb-4">
+    <div class="container">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav" aria-controls="navbarNav"
+                aria-expanded="false" aria-label="Переключить навигацию">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand d-flex align-items-center label-text" href="/books">
+            <img th:src="@{/images/logo.png}" alt="Книга" width="110" height="58" class="me-2 rounded-circle">
+            <span style="color: #8B4513; font-weight: bold;">BookHunter</span>
+        </a>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link active navbar-text" href="/books">Каталог</a>
+                </li>
+
+                <li class="nav-item" sec:authorize="hasAuthority('ROLE_ADMIN')">
+                    <a class="nav-link navbar-text" href="/admin/books">Редактировать книги</a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav" style="margin: 5px">
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <form th:action="@{/logout}" method="post" class="d-inline">
+                        <button class="navbar-text">Выйти</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0" th:text="${book.id == null} ? 'Создание товара' : 'Редактирование товара'"></h1>
+        <a href="/admin/books" class="btn btn-outline-secondary">Назад к списку</a>
+    </div>
+
+    <form th:action="@{/admin/books/save}"
+          th:object="${book}"
+          method="post"
+          class="row g-4 p-4 bg-white rounded-3 shadow-sm" style="background: linear-gradient(to bottom, #FFFFFF, #F9F9EB, #F6F6DD) no-repeat fixed center;">
+
+        <input type="hidden" th:field="*{id}">
+
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Название</label>
+            <input type="text" th:field="*{title}" class="form-control form-control-lg" required>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Жанр</label>
+            <input type="text" th:field="*{genre}" class="form-control form-control-lg">
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Год</label>
+            <input type="text" th:field="*{year}" class="form-control form-control-lg">
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Автор</label>
+            <input type="text" th:field="*{author}" class="form-control form-control-lg" required>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label fw-bold">ISBN</label>
+            <input type="text" th:field="*{isbn}" class="form-control form-control-lg" required>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label fw-bold">Цена</label>
+            <input type="number" step="0.01" th:field="*{price}" class="form-control form-control-lg" required>
+        </div>
+
+        <div class="col-md-8">
+            <label class="form-label fw-bold">URL картинки</label>
+            <input type="text" th:field="*{image}" class="form-control form-control-lg" placeholder="https://... или /image/...">
+        </div>
+
+        <div class="col-12 d-flex justify-content-end gap-2">
+            <button type="submit" class="btn btn-lg px-4">
+                <i class="bi bi-check-circle me-1"></i> Сохранить
+            </button>
+            <a href="/admin/books" class="btn btn-outline-secondary btn-lg px-4">
+                <i class="bi bi-x-circle me-1"></i> Отмена
+            </a>
+        </div>
+
+    </form>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/animations.js}"></script>
+</body>
+</html>
